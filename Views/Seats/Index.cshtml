@@ -1,0 +1,24 @@
+@model List<CineLite.Models.Seat>
+
+<h2>Seats</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Seat Number</th>
+            <th>Booked</th>
+            <th>Repertoire ID</th>
+            <th>Employee ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var seat in Model)
+        {
+            <tr>
+                <td>@seat.SeatNumber</td>
+                <td>@seat.IsBooked</td>
+                <td>@seat.RepertoireId</td>
+                <td>@seat.EmployeeId</td>
+            </tr>
+        }
+    </tbody>
+</table>

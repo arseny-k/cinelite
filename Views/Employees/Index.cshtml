@@ -1,0 +1,30 @@
+@model List<CineLite.Models.Employee>
+
+<h2>Employees</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Address</th>
+            <th>Phone</th>
+            <th>Passport</th>
+            <th>Position ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var emp in Model)
+        {
+            <tr>
+                <td>@emp.FullName</td>
+                <td>@emp.Gender</td>
+                <td>@emp.Age</td>
+                <td>@emp.Address</td>
+                <td>@emp.Phone</td>
+                <td>@emp.PassportData</td>
+                <td>@emp.PositionId</td>
+            </tr>
+        }
+    </tbody>
+</table>

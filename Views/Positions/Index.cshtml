@@ -1,0 +1,24 @@
+@model List<CineLite.Models.Position>
+
+<h2>Positions</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Salary</th>
+            <th>Duties</th>
+            <th>Requirements</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var position in Model)
+        {
+            <tr>
+                <td>@position.Title</td>
+                <td>@position.Salary</td>
+                <td>@position.Duties</td>
+                <td>@position.Requirements</td>
+            </tr>
+        }
+    </tbody>
+</table>

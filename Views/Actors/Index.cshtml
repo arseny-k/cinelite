@@ -1,0 +1,22 @@
+@model List<CineLite.Models.Actor>
+
+<h2>Actors</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Age Restrictions</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var actor in Model)
+        {
+            <tr>
+                <td>@actor.Name</td>
+                <td>@actor.AgeRestrictions</td>
+                <td>@actor.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>

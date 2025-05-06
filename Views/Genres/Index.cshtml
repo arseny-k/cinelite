@@ -1,0 +1,20 @@
+@model List<CineLite.Models.Genre>
+
+<h2>Genres</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var genre in Model)
+        {
+            <tr>
+                <td>@genre.Name</td>
+                <td>@genre.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
