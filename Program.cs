@@ -1,4 +1,15 @@
+using CineLite.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// DB connection
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(10, 5, 12)) // укажи свою версию MariaDB
+    )
+);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

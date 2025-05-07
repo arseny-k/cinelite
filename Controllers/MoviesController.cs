@@ -1,25 +1,31 @@
 using Microsoft.AspNetCore.Mvc;
+using CineLite.Data;
 using CineLite.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CineLite.Controllers
 {
     public class MoviesController : Controller
     {
-        // временный список, вместо БД
-        private static List<Movie> _movies = new List<Movie>
-        {
-            new Movie { Id = 1, Title = "Inception", Genre = "Sci-Fi", Description = "Mind-bending thriller", Duration = TimeSpan.FromMinutes(148) },
-            new Movie { Id = 2, Title = "The Godfather", Genre = "Crime", Description = "Mafia classic", Duration = TimeSpan.FromMinutes(175) }
-        };
+        private readonly ApplicationDbContext _context;
 
-        public IActionResult Index()
+        public MoviesController(ApplicationDbContext context)
         {
-            return View(_movies);
+            _context = context;
         }
 
-        public IActionResult Details(int id)
+        // GET: /Movies
+        public async Task<IActionResult> Index()
         {
-            var movie = _movies.FirstOrDefault(m => m.Id == id);
+            var movies = await _context.Movies.Include(m => m.Genre).ToListAsync();
+            return View(movies);
+        }
+
+        // GET: /Movies/Details/5
+        public async Task<IActionResult> Details(int id)
+        {
+            var movie = await _context.Movies.Include(m => m.Genre)
+                                             .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null) return NotFound();
             return View(movie);
         }
@@ -27,73 +33,82 @@ namespace CineLite.Controllers
         // GET: /Movies/Create
         public IActionResult Create()
         {
+            ViewBag.Genres = _context.Genres.ToList();
             return View();
         }
 
         // POST: /Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Movie movie)
+        public async Task<IActionResult> Create(Movie movie)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                movie.Id = _movies.Max(m => m.Id) + 1; // временно вручную увеличиваем ID
-                _movies.Add(movie);
-                return RedirectToAction(nameof(Index));
+                Console.WriteLine("❌ ModelState invalid");
+                foreach (var e in ModelState.Values.SelectMany(v => v.Errors))
+                    Console.WriteLine($"⚠️ {e.ErrorMessage}");
+
+                ViewBag.Genres = _context.Genres.ToList();
+                return View(movie);
             }
 
-            return View(movie);
-        }
-
-        // GET: /Movies/Edit/1
-        public IActionResult Edit(int id)
-        {
-            var movie = _movies.FirstOrDefault(m => m.Id == id);
-            if (movie == null) return NotFound();
-            return View(movie);
-        }
-
-        // POST: /Movies/Edit/1
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Movie updatedMovie)
-        {
-            var movie = _movies.FirstOrDefault(m => m.Id == id);
-            if (movie == null) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                movie.Title = updatedMovie.Title;
-                movie.Genre = updatedMovie.Genre;
-                movie.Description = updatedMovie.Description;
-                movie.Duration = updatedMovie.Duration;
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(updatedMovie);
-        }
-
-        // GET: /Movies/Delete/1
-        public IActionResult Delete(int id)
-        {
-            var movie = _movies.FirstOrDefault(m => m.Id == id);
-            if (movie == null) return NotFound();
-            return View(movie);
-        }
-
-        // POST: /Movies/Delete/1
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
-        {
-            var movie = _movies.FirstOrDefault(m => m.Id == id);
-            if (movie != null)
-            {
-                _movies.Remove(movie);
-            }
+            _context.Movies.Add(movie);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
 
+        // GET: /Movies/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null) return NotFound();
+
+            ViewBag.Genres = _context.Genres.ToList();
+            return View(movie);
+        }
+
+        // POST: /Movies/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Movie movie)
+        {
+            if (id != movie.Id) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(movie);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.Genres = _context.Genres.ToList();
+            return View(movie);
+        }
+
+        // GET: /Movies/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var movie = await _context.Movies.Include(m => m.Genre)
+                                             .FirstOrDefaultAsync(m => m.Id == id);
+            if (movie == null) return NotFound();
+
+            return View(movie);
+        }
+
+        // POST: /Movies/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie != null)
+            {
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
     }
 }

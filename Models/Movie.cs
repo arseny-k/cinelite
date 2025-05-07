@@ -8,6 +8,6 @@ namespace CineLite.Models
         public TimeSpan Duration { get; set; }
 
         public int GenreId { get; set; }
-        public Genre Genre { get; set; } = null!;
+        public Genre? Genre { get; set; }
     }
 }
