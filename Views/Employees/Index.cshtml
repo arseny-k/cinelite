@@ -1,6 +1,10 @@
 @model List<CineLite.Models.Employee>
 
 <h2>Employees</h2>
+
+<a class="btn btn-success mb-3" href="/Employees/Create">Add New Employee</a>
+
+<h2>Employees</h2>
 <table class="table">
     <thead>
         <tr>
@@ -10,7 +14,7 @@
             <th>Address</th>
             <th>Phone</th>
             <th>Passport</th>
-            <th>Position ID</th>
+            <th>Position</th>
         </tr>
     </thead>
     <tbody>
@@ -23,7 +27,13 @@
                 <td>@emp.Address</td>
                 <td>@emp.Phone</td>
                 <td>@emp.PassportData</td>
-                <td>@emp.PositionId</td>
+                <td>@emp.Position</td>
+
+                <td>
+                    <a class="btn btn-info btn-sm" href="/Employees/Details/@emp.Id">Details</a>
+                    <a class="btn btn-warning btn-sm" href="/Employees/Edit/@emp.Id">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="/Employees/Delete/@emp.Id">Delete</a>
+                </td>
             </tr>
         }
     </tbody>

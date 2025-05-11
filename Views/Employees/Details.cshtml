@@ -1,0 +1,16 @@
+@model CineLite.Models.Employee
+
+<h2>Employee Details</h2>
+
+<table class="table">
+    <tr><th>Full Name</th><td>@Model.FullName</td></tr>
+    <tr><th>Gender</th><td>@Model.Gender</td></tr>
+    <tr><th>Age</th><td>@Model.Age</td></tr>
+    <tr><th>Phone</th><td>@Model.Phone</td></tr>
+    <tr><th>Address</th><td>@Model.Address</td></tr>
+    <tr><th>Passport</th><td>@Model.PassportData</td></tr>
+    <tr><th>Position</th><td>@Model.Position?.Title</td></tr>
+</table>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

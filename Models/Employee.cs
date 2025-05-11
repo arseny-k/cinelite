@@ -11,6 +11,6 @@ namespace CineLite.Models
         public required string PassportData { get; set; }
 
         public int PositionId { get; set; }
-        public Position Position { get; set; } = null!;
+        public Position? Position { get; set; }
     }
 }
